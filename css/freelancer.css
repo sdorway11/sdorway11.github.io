@@ -457,3 +457,11 @@ footer .footer-below {
     display: none;
     opacity: 0;
 }
+
+img {
+    transition: -webkit-transform 0.25s ease;
+}
+
+img:active {
+    -webkit-transform: scale(2);
+}
