@@ -225,8 +225,7 @@
                             </div>
                         </div>
                         <br>
-                        <input class="btn btn-success btn-lg" type="submit" value="Send">
-                        <input type="hidden" name="_next" value="index.html" />
+                        <input class="btn btn-success btn-lg" type="submit" value="Send" onclick="Thanks()">
                     </form>
                 </div>
             </div>
@@ -596,10 +595,16 @@
         </div>
     </div>
 
+    <div class="portfolio-modal modal fade" id="Contact" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+            <p>Thanks for sending your information! I will be in contact with you shortly.</p>
+        </div>
+    </div>
+
     <!-- jQuery -->
     <script src="js/jquery.js"></script>
 
-    <!-- Bootstrap Core JavaScript -->
+    <!-- Bootstrap Core JavaScript 
     <script src="js/bootstrap.min.js"></script>
 
     <!-- Plugin JavaScript -->
@@ -623,6 +628,11 @@
 </body>
 
 <script>
+
+    function Thanks() {
+        $('#Contact').modal('show');
+    }
+
     function MitchGame() {
         var canvas = document.getElementById("myCanvas");
         var ctx = canvas.getContext("2d");
