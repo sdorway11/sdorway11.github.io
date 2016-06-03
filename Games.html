@@ -1,0 +1,346 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Bewander</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Freelancer - Start Bootstrap Theme</title>
+
+    <!-- Bootstrap Core CSS - Uses Bootswatch Flatly Theme: http://bootswatch.com/flatly/ -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="css/freelancer.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+<body>
+    <div class="portfolio-modal">
+        <div class="modal-content">
+            <a href="index.html" class="close-modal">
+                <div class="lr">
+                    <div class="rl">
+                    </div>
+                </div>
+            </a>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 col-lg-offset-2">
+                        <div class="modal-body">
+                            <h2>Mitchell Ball!</h2>
+                            <hr class="star-primary">
+                            <!--<img src="img/portfolio/submarine.png" class="img-responsive img-centered" alt="">-->
+                            <a onclick="MitchGame()">
+                                <img id="PlayImage" src="img/portfolio/Play.png" class="img-responsive img-centered" style="opacity: .5">
+                                <canvas id="myCanvas" width="480" height="320" style="border: 1px solid; display: none"></canvas>
+                            </a>
+                            <p>Try your luck to win  a two night stay in Mitch's new house!!!(When they inevitably close on a house)</p>
+                            <ul class="list-inline item-details">
+                                <li>
+                                    Client:
+                                    <strong>
+                                        <a href="https://www.facebook.com/mitchell.bailey.7?fref=ts">Mitch</a>
+                                    </strong>
+                                </li>
+                                <li>
+                                    Date:
+                                    <strong>may 2016</strong>
+                                </li>
+                                <li>
+                                    Service:
+                                    <strong>Important use of my free time</strong>
+                                </li>
+                            </ul>
+                            <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+
+    <!-- Plugin JavaScript -->
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+    <script src="js/classie.js"></script>
+    <script src="js/cbpAnimatedHeader.js"></script>
+
+    <!-- Contact Form JavaScript -->
+    <script src="js/jqBootstrapValidation.js"></script>
+    <script src="js/contact_me.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="js/freelancer.js"></script>
+
+    <!-- Angularjs -->
+    <span class="highlight">
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.18/angular.min.js"></script>
+    </span>
+
+    <script>
+        $('#PlayImage').hover(function () {
+            $(this).css("opacity", "1");
+        }, function () {
+            $(this).css("opacity", ".5");
+        });
+
+        function MitchGame() {
+            document.getElementById("PlayImage").style.display = "none";
+            document.getElementById("myCanvas").style.display = "inherit";
+            var canvas = document.getElementById("myCanvas");
+            var ctx = canvas.getContext("2d");
+            var ballRadius = 25;
+            var thumbImg = document.createElement('img');
+            thumbImg.src = 'mitch.jpg';
+
+            var x = canvas.width / 2;
+            var y = canvas.height - 30;
+            var dx = 2;
+            var dy = -2;
+            var paddleHeight = 10;
+            var paddleWidth = 75;
+            var paddleX = (canvas.width - paddleWidth) / 2;
+            var rightPressed = false;
+            var leftPressed = false;
+            var brickRowCount = 3;
+            var brickColumnCount = 5;
+            var brickWidth = 75;
+            var brickHeight = 20;
+            var brickPadding = 10;
+            var brickOffsetTop = 30;
+            var brickOffsetLeft = 30;
+            document.addEventListener("keydown", keyDownHandler, false);
+            document.addEventListener("keyup", keyUpHandler, false);
+            document.addEventListener("mousemove", mouseMoveHandler, false);
+
+            var lives = 3;
+
+            var score = 0;
+
+            var paddleColor = "#0095DD"
+            var brickColor = "#0095DD"
+
+
+            function drawLives() {
+                ctx.font = "16px Arial";
+                ctx.fillStyle = "#0095DD";
+                ctx.fillText("Lives: " + lives, canvas.width - 65, 20);
+            }
+
+            function mouseMoveHandler(e) {
+                var relativeX = e.clientX - canvas.offsetLeft;
+                if (relativeX > 0 && relativeX < canvas.width) {
+                    paddleX = relativeX - paddleWidth / 2;
+                }
+            }
+
+            function drawScore() {
+                ctx.font = "16px Arial";
+                ctx.fillStyle = "#0095DD";
+                ctx.fillText("Score: " + score, 8, 20);
+            }
+
+            var bricks = [];
+            for (c = 0; c < brickColumnCount; c++) {
+                bricks[c] = [];
+                for (r = 0; r < brickRowCount; r++) {
+                    bricks[c][r] = { x: 0, y: 0, status: 2 };
+                }
+            }
+
+            function keyDownHandler(e) {
+                if (e.keyCode == 39) {
+
+                    rightPressed = true;
+
+                }
+                else if (e.keyCode == 37) {
+
+                    leftPressed = true;
+
+                }
+
+            }
+
+            function keyUpHandler(e) {
+
+                if (e.keyCode == 39) {
+
+                    rightPressed = false;
+                }
+                else if (e.keyCode == 37) {
+
+                    leftPressed = false;
+
+                }
+            }
+
+
+
+            function drawBall() {
+                //		ctx.beginPath();
+                //		ctx.arc(x,y,ballRadius,0,2*Math.PI);
+                //		ctx.fillstyle="blue";
+                //		ctx.fillStroke="";
+                //		ctx.Stroke="10"
+                //		ctx.fill();
+                //		ctx.closePath
+
+                //		ctx.beginPath();
+                //		ctx.arc(x,y,ballRadius,0,Math.PI*2,true); // Outer circle
+                //		ctx.arc(x,y,(ballRadius*1.5),0,Math.PI,false);  // Mouth (clockwise)
+                //		ctx.arc((x-10),(y-10),(ballRadius*.1),0,Math.PI*2,true);  // Left eye
+                //		ctx.arc((x+15),(y-10),(ballRadius*.1),0,Math.PI*2,true);  // Right eye
+                //		ctx.stroke();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(x, y, ballRadius, 0, Math.PI * 2, true);
+                ctx.closePath();
+                ctx.clip();
+
+                ctx.drawImage(thumbImg, x - 25, y - 25, 50, 50);
+
+                ctx.beginPath();
+                ctx.arc(x, y, 50, 50, Math.PI * 2, true);
+                ctx.clip();
+                ctx.closePath();
+                ctx.restore();
+            }
+
+            function drawPaddle() {
+                ctx.beginPath();
+                ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
+                ctx.fillStyle = paddleColor;
+                ctx.fill();
+                ctx.closePath();
+            }
+
+            function drawBricks() {
+                for (c = 0; c < brickColumnCount; c++) {
+                    for (r = 0; r < brickRowCount; r++) {
+                        if (bricks[c][r].status == 2) {
+                            var brickX = (c * (brickWidth + brickPadding)) + brickOffsetLeft;
+                            var brickY = (r * (brickHeight + brickPadding)) + brickOffsetTop;
+                            bricks[c][r].x = brickX;
+                            bricks[c][r].y = brickY;
+                            ctx.beginPath();
+                            ctx.rect(brickX, brickY, brickWidth, brickHeight);
+                            ctx.fillStyle = brickColor;
+                            ctx.fill();
+                            ctx.closePath();
+                        }
+                        if (bricks[c][r].status == 1) {
+                            var brickX = (c * (brickWidth + brickPadding)) + brickOffsetLeft;
+                            var brickY = (r * (brickHeight + brickPadding)) + brickOffsetTop;
+                            bricks[c][r].x = brickX;
+                            bricks[c][r].y = brickY;
+                            ctx.beginPath();
+                            ctx.rect(brickX, brickY, brickWidth, brickHeight);
+                            ctx.fillStyle = "blue";
+                            ctx.fill();
+                            ctx.closePath();
+                        }
+                    }
+                }
+            }
+
+
+            function collisionDetection() {
+                for (c = 0; c < brickColumnCount; c++) {
+                    for (r = 0; r < brickRowCount; r++) {
+                        var b = bricks[c][r];
+                        if (b.status >= 1) {
+                            if (x > b.x && x < b.x + brickWidth && y > b.y && y < b.y + brickHeight) {
+                                dy = -dy;
+                                b.status = (b.status - 1);
+                                score++;
+                                if (score == brickRowCount * brickColumnCount * 2) {
+                                    alert("YOU WIN, CONGRATULATIONS!");
+                                    document.location.reload();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                drawBricks();
+                drawBall();
+                drawPaddle();
+                drawScore();
+                drawLives();
+                collisionDetection();
+
+                if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
+                    dx = -dx;
+                }
+
+                if (y + dy < ballRadius) {
+                    dy = -dy;
+                }
+                else if (y + dy > canvas.height - ballRadius) {
+                    if (x > paddleX && x < paddleX + paddleWidth) {
+                        if (y = y - paddleHeight) {
+                            dy = -dy;
+                        }
+                    }
+                    else {
+                        lives--;
+                        if (!lives) {
+                            alert("GAME OVER");
+                            document.location.reload();
+                        }
+                        else {
+                            x = canvas.width / 2;
+                            y = canvas.height - 30;
+                            dx = 2;
+                            dy = -2;
+                            paddleX = (canvas.width - paddleWidth) / 2;
+                        }
+                    }
+                }
+
+                if (rightPressed && paddleX < canvas.width - paddleWidth) {
+                    paddleX += 7;
+                }
+                else if (leftPressed && paddleX > 0) {
+                    paddleX -= 7;
+                }
+
+                x = x + dx;
+                y = y + dy;
+
+                requestAnimationFrame(draw);
+            }
+
+            draw();
+        }
+    </script>
+</body>
+</html>
